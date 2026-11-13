@@ -1,0 +1,511 @@
+{
+ "meta": {
+  "what": "Per-cycle provisioning time (seconds) by strategy and parent size -- Table II and Fig. 5",
+  "sizes_gb": [
+   "1",
+   "2",
+   "8",
+   "32",
+   "64",
+   "128",
+   "256"
+  ],
+  "sizes_note": "nominal; generated parents land somewhat below them",
+  "statistic": "median of n runs; min-max where individual runs were recorded",
+  "engines": {
+   "RDS PostgreSQL": "16.9, db.m5.2xlarge",
+   "Aurora PostgreSQL": "16.9, db.r6g.large",
+   "Neon": "Neon serverless Postgres (PostgreSQL 18) -- the technology Databricks Lakebase is built on",
+   "SQLite (client)": "in-memory, on the client host"
+  },
+  "generated_by": "scripts/build_paper_results.py"
+ },
+ "table2": {
+  "cow_branch": {
+   "label": "Copy-on-write branch",
+   "engine": "Neon",
+   "mechanism": "Neon branch API (metadata operation over shared pages)",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 0.388157624998712,
+     "min_s": 0.3371448749967385,
+     "max_s": 0.4874613749998389,
+     "n": 12,
+     "source": "neon_flatness.json (one session, parent grown in place)"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 0.37753116699605016,
+     "min_s": 0.3278950420062756,
+     "max_s": 0.6036880419997033,
+     "n": 12,
+     "source": "neon_flatness.json (one session, parent grown in place)"
+    },
+    "8": {
+     "status": "measured",
+     "median_s": 0.42865810399962356,
+     "min_s": 0.3283177910052473,
+     "max_s": 0.507174041995313,
+     "n": 12,
+     "source": "neon_flatness.json (one session, parent grown in place)"
+    },
+    "32": {
+     "status": "measured",
+     "median_s": 0.39991827049379935,
+     "min_s": 0.3289040420058882,
+     "max_s": 0.5047977499925764,
+     "n": 12,
+     "source": "neon_flatness.json (one session, parent grown in place)"
+    },
+    "64": {
+     "status": "measured",
+     "median_s": 0.3811430419955286,
+     "min_s": 0.3664225829998031,
+     "max_s": 0.5116169579996495,
+     "n": 12,
+     "source": "neon_flatness.json (one session, parent grown in place)"
+    },
+    "128": {
+     "status": "measured",
+     "median_s": 0.398,
+     "min_s": 0.357,
+     "max_s": 0.43,
+     "n": 5,
+     "source": "neon_large_scale_128gb.json (separate session)"
+    },
+    "256": {
+     "status": "measured",
+     "median_s": 0.3889581670227926,
+     "min_s": 0.3786892080097459,
+     "max_s": 0.400051667005755,
+     "n": 3,
+     "source": "neon_large_scale_256gb.json (separate session)"
+    }
+   }
+  },
+  "cow_clone": {
+   "label": "Copy-on-write clone",
+   "engine": "Aurora PostgreSQL",
+   "mechanism": "restore-to-point-in-time, RestoreType=copy-on-write, plus instance boot",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 454.40865037550975,
+     "min_s": 432.32877558399923,
+     "max_s": 476.48852516702027,
+     "n": 2,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 369.1409377920063,
+     "min_s": 354.1217067500038,
+     "max_s": 385.11558070799947,
+     "n": 3,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    },
+    "8": {
+     "status": "measured",
+     "median_s": 353.2835195840016,
+     "min_s": 323.21242258399434,
+     "max_s": 384.0731915829965,
+     "n": 3,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    },
+    "32": {
+     "status": "measured",
+     "median_s": 452.2,
+     "min_s": 444.4,
+     "max_s": 460.0,
+     "n": 2,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    },
+    "64": {
+     "status": "measured",
+     "median_s": 362.3812651039916,
+     "min_s": 353.67761504199007,
+     "max_s": 371.08491516599315,
+     "n": 2,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    },
+    "128": {
+     "status": "measured",
+     "median_s": 460.6771560414927,
+     "min_s": 445.52658474998316,
+     "max_s": 475.82772733300226,
+     "n": 2,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    },
+    "256": {
+     "status": "measured",
+     "median_s": 400.940562667005,
+     "min_s": 355.5047945000115,
+     "max_s": 446.3763308339985,
+     "n": 2,
+     "source": "aurora_clone_scale.json / aurora_fill.json"
+    }
+   }
+  },
+  "copy_based_branch": {
+   "label": "Copy-based branch",
+   "engine": "RDS PostgreSQL",
+   "mechanism": "CREATE DATABASE ... TEMPLATE (full physical copy; branch-shaped, not copy-on-write)",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 8.533977541999775,
+     "min_s": 8.514784958999371,
+     "max_s": 8.612825333002547,
+     "n": 3,
+     "source": "sweep_rds.json"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 17.23158229100227,
+     "min_s": 17.129311500000767,
+     "max_s": 17.363185249996604,
+     "n": 3,
+     "source": "sweep_rds.json"
+    },
+    "8": {
+     "status": "measured",
+     "median_s": 70.45300670800134,
+     "min_s": 70.29677074999927,
+     "max_s": 70.7283885830002,
+     "n": 3,
+     "source": "sweep_rds.json"
+    },
+    "32": {
+     "status": "measured",
+     "median_s": 320.2685085830017,
+     "min_s": 317.6856012080025,
+     "max_s": 322.91382995899767,
+     "n": 3,
+     "source": "sweep_rds.json"
+    },
+    "64": {
+     "status": "measured",
+     "median_s": 632.9102168340032,
+     "min_s": 632.752107332999,
+     "max_s": 634.5612982910025,
+     "n": 3,
+     "source": "sweep_rds.json"
+    },
+    "128": {
+     "status": "measured",
+     "median_s": 1104.0730492080002,
+     "min_s": 1089.2476315000022,
+     "max_s": 1107.5347524999997,
+     "n": 3,
+     "source": "rds_large_scale_copy_128gb.json"
+    },
+    "256": {
+     "status": "measured",
+     "median_s": 2275.2901115624845,
+     "min_s": 2245.160930916987,
+     "max_s": 2305.419292207982,
+     "n": 2,
+     "source": "rds_large_scale_copy_256gb.json (cold run excluded)"
+    }
+   }
+  },
+  "fresh_fixture": {
+   "label": "Fresh fixture",
+   "engine": "RDS PostgreSQL",
+   "mechanism": "drop / create / seed",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 31.365234542005055,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 58.41935399999784,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "8": {
+     "status": "measured",
+     "median_s": 222.72101204199862,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "32": {
+     "status": "measured",
+     "median_s": 897.4666584160004,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "64": {
+     "status": "measured",
+     "median_s": 1726.4,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "128": {
+     "status": "measured",
+     "median_s": 3196.2490196249855,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "256": {
+     "status": "measured",
+     "median_s": 7265.445077790995,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    }
+   }
+  },
+  "full_restore": {
+   "label": "Full copy / restore",
+   "engine": "RDS PostgreSQL",
+   "mechanism": "pg_dump -Fd -j4 then pg_restore -j4 from a client",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 67.74632974900305,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 162.27919762600504,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "8": {
+     "status": "measured",
+     "median_s": 473.0360694590054,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "sweep_rds_all.json"
+    },
+    "32": {
+     "status": "failed",
+     "source": "sweep_rds_all.json + sweep_rds_all.log",
+     "note": "pg_restore worker died mid-transfer over the client link",
+     "time_to_failure_s": 983.0914144160051,
+     "dump_s": 785.6008688330039,
+     "restore_until_failure_s": 197.49054558300122
+    },
+    "64": {
+     "status": "failed",
+     "source": "sweep_rds_all.json + sweep_rds_all.log",
+     "note": "pg_restore worker died mid-transfer over the client link; time not recorded (sweep crashed before writing, log has no timestamps)",
+     "time_to_failure_s": null
+    },
+    "128": {
+     "status": "skipped",
+     "note": "dump would not fit on local disk",
+     "source": "sweep_rds_all.json"
+    },
+    "256": {
+     "status": "not_run"
+    }
+   }
+  },
+  "shared_fixture_rollback": {
+   "label": "Shared fixture (transactional rollback)",
+   "engine": "RDS PostgreSQL",
+   "mechanism": "ROLLBACK on one shared database",
+   "note": "no-isolation baseline: flat only because cycles share one database",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 0.3358170204992348,
+     "min_s": null,
+     "max_s": null,
+     "n": 10,
+     "source": "sweep_rds_all.json"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 0.3926372290006839,
+     "min_s": null,
+     "max_s": null,
+     "n": 10,
+     "source": "sweep_rds_all.json"
+    },
+    "8": {
+     "status": "measured",
+     "median_s": 0.386419416499848,
+     "min_s": null,
+     "max_s": null,
+     "n": 10,
+     "source": "sweep_rds_all.json"
+    },
+    "32": {
+     "status": "measured",
+     "median_s": 0.3994298545003403,
+     "min_s": null,
+     "max_s": null,
+     "n": 10,
+     "source": "sweep_rds_all.json"
+    },
+    "64": {
+     "status": "measured",
+     "median_s": 0.5926,
+     "min_s": null,
+     "max_s": null,
+     "n": 10,
+     "source": "sweep_rds_all.json"
+    },
+    "128": {
+     "status": "measured",
+     "median_s": 0.6075952909886837,
+     "min_s": null,
+     "max_s": null,
+     "n": 10,
+     "source": "sweep_rds_all.json"
+    },
+    "256": {
+     "status": "not_run"
+    }
+   }
+  },
+  "in_memory_fake": {
+   "label": "In-memory fake",
+   "engine": "SQLite (client)",
+   "mechanism": "in-memory database built per cycle",
+   "cells": {
+    "1": {
+     "status": "measured",
+     "median_s": 27.5,
+     "min_s": null,
+     "max_s": null,
+     "n": 1,
+     "source": "local_strategies.json"
+    },
+    "2": {
+     "status": "measured",
+     "median_s": 28.937051541500296,
+     "min_s": 27.896553917000347,
+     "max_s": 30.192090291999193,
+     "n": 8,
+     "source": "local_inmemory_fake_2gb.json (local Docker phase)"
+    },
+    "8": {
+     "status": "oom",
+     "note": "needs RAM proportional to data",
+     "source": "local_strategies.json"
+    },
+    "32": {
+     "status": "oom",
+     "note": "needs RAM proportional to data",
+     "source": "local_strategies.json"
+    },
+    "64": {
+     "status": "oom",
+     "note": "needs RAM proportional to data",
+     "source": "local_strategies.json"
+    },
+    "128": {
+     "status": "oom",
+     "note": "needs RAM proportional to data",
+     "source": "local_strategies.json"
+    },
+    "256": {
+     "status": "oom",
+     "note": "needs RAM proportional to data",
+     "source": "local_strategies.json"
+    }
+   }
+  }
+ },
+ "flatness": {
+  "single_session": {
+   "sizes_gb": [
+    "0.02",
+    "1",
+    "2",
+    "8",
+    "32",
+    "64"
+   ],
+   "runs": 72,
+   "mean_s": 0.3964067598610402,
+   "stdev_s": 0.050069907373946,
+   "parent_pg_database_size_gb": {
+    "0.02": 0.04,
+    "1": 1.0,
+    "2": 1.9,
+    "8": 7.4,
+    "32": 27.0,
+    "64": 52.5
+   }
+  },
+  "separate_sessions": {
+   "128": {
+    "runs": 5,
+    "parent_pg_database_size_gb": 121.4
+   },
+   "256": {
+    "runs": 3,
+    "parent_neon_logical_size_gb": 217.7
+   }
+  },
+  "median_range_s": [
+   0.3727223545065499,
+   0.42865810399962356
+  ],
+  "mean_range_s": [
+   0.38241231608238496,
+   0.4145260485820472
+  ],
+  "span": "20 MB to 256 GB nominal (largest parent: 238.8 GB pg_database_size, 217.7 GB Neon logical)"
+ },
+ "read_amplification": {
+  "engine": "lakebase",
+  "measured": "2026-08-28",
+  "engine_note": "Measured on a Databricks Lakebase copy-on-write branch with the original harness; the Neon driver was added 2026-09-03. Re-measurable on Neon via steady_state in config/benchmark.yaml.",
+  "measurement": "CoW read amplification (first-touch vs warm) at GB scale",
+  "method": "Same laptop client + same branch connection; RTT is common-mode and cancels in the first-touch-vs-warm delta. Absolute ms inflated by laptop->cloud RTT (~300ms).",
+  "queries": [
+   "top-accounts GROUP BY scan",
+   "hot-account point lookup"
+  ],
+  "cow_branch_first_touch": {
+   "median_ms": 362.79,
+   "n": 30
+  },
+  "cow_branch_warm": {
+   "median_ms": 319.93,
+   "n": 30
+  },
+  "parent_full_materialized": {
+   "median_ms": 498.0,
+   "n": 30
+  },
+  "read_amplification_first_touch_vs_warm_ms": 42.86,
+  "read_amplification_pct": 13.4,
+  "takeaway": "CoW first-touch reads are ~13% slower than warm; the branch is not slower than a fully materialized copy. Read amplification is modest and transient."
+ },
+ "storage_at_creation": {
+  "engine": "lakebase",
+  "parent_bytes": 218235764736,
+  "storage_at_creation_bytes": 0,
+  "note": "The only storage-at-creation measurement in the benchmark (Lakebase branch of a 218 GB parent). The Neon runs did not capture storage at creation."
+ }
+}

@@ -1,0 +1,8 @@
+# Public PyPI (no internal index needed):
+#   pip install -r requirements.txt
+psycopg[binary]>=3.1
+PyYAML
+matplotlib
+Faker
+requests            # Neon REST API
+boto3               # Aurora fast-clone provisioning + (optional) Terraform-less RDS

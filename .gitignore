@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+*.pyc
+results/data/
+results/raw-*.jsonl
+results/summary-*.json
+results/*.png
+# secrets / generated overlays
+config/cloud.yaml
+config/rds.yaml
+# terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.*
+infra/terraform/.terraform.lock.hcl
+infra/terraform/*.tfvars
+.DS_Store
+infra/terraform/tfplan
+infra/terraform/tfplan*
+infra/terraform-neon/tfplan*
+infra/terraform-neon/.terraform/
+infra/terraform-neon/*.tfstate*
+infra/terraform-neon/.terraform.lock.hcl
+results/*.log
+results/logs/
+results/*.pdf

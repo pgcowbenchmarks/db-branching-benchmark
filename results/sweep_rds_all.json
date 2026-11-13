@@ -1,0 +1,55 @@
+{
+ "1": {
+  "fresh_fixture_s": 31.365234542005055,
+  "parent_bytes": 1111892495,
+  "txn_rollback_median_s": 0.3358170204992348,
+  "full_restore_dump_s": 33.88906866600155,
+  "full_restore_restore_s": 33.857261083001504,
+  "full_restore_total_s": 67.74632974900305,
+  "dump_bytes": 148923172
+ },
+ "8": {
+  "fresh_fixture_s": 222.72101204199862,
+  "parent_bytes": 8829338127,
+  "txn_rollback_median_s": 0.386419416499848,
+  "full_restore_dump_s": 213.83451812500425,
+  "full_restore_restore_s": 259.2015513340011,
+  "full_restore_total_s": 473.0360694590054,
+  "dump_bytes": 1244841514
+ },
+ "32": {
+  "fresh_fixture_s": 897.4666584160004,
+  "parent_bytes": 35156042255,
+  "txn_rollback_median_s": 0.3994298545003403,
+  "full_restore_dump_s": 785.6008688330039,
+  "full_restore_restore_s": 197.49054558300122,
+  "full_restore_total_s": 983.0914144160051,
+  "dump_bytes": 5076782473,
+  "full_restore_status": "error: pg_restore worker died mid-restore (PQputCopyData timeout / SSL SYSCALL; see sweep_rds_all.log). Dump completed; full_restore_restore_s/total_s are time-to-failure, not a completed restore."
+ },
+ "64": {
+  "fresh_fixture_s": 1726.4,
+  "txn_rollback_median_s": 0.5926,
+  "parent_bytes": 66600000000,
+  "full_restore_status": "error: connection dropped (64GB restore, ~66GB)"
+ },
+ "2": {
+  "fresh_fixture_s": 58.41935399999784,
+  "parent_bytes": 2215264783,
+  "txn_rollback_median_s": 0.3926372290006839,
+  "full_restore_dump_s": 101.91739654200501,
+  "full_restore_restore_s": 60.361801084000035,
+  "full_restore_total_s": 162.27919762600504,
+  "dump_bytes": 302460911
+ },
+ "128": {
+  "fresh_fixture_s": 3196.2490196249855,
+  "parent_bytes": 121414672911,
+  "txn_rollback_median_s": 0.6075952909886837,
+  "full_restore_status": "skip (local dump disk limit)"
+ },
+ "256": {
+  "fresh_fixture_s": 7265.445077790995,
+  "parent_bytes": 239021408783
+ }
+}

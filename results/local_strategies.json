@@ -1,0 +1,11 @@
+{
+  "in_memory_fake_sqlite": {
+    "1": {"build_s": 27.5, "peak_ram_gb": 8.1, "status": "ok"},
+    "8": {"status": "fail", "reason": "OOM (~60GB RAM needed)"},
+    "32": {"status": "fail", "reason": "OOM"},
+    "64": {"status": "fail", "reason": "OOM"},
+    "128": {"status": "fail", "reason": "OOM (~1TB RAM needed)"},
+    "note": "In-memory fake scales with RAM; feasible only at the low end, fails by design at enterprise scale."
+  },
+  "note_full_restore_ephemeral": "full_restore (pg_restore) and ephemeral_container are members of the 'materialize the full dataset' family: their per-cycle cost tracks fresh_fixture (rebuild/reload) and rises with size. At cloud scale full_restore additionally requires a client-side dump transfer and ephemeral_container requires local Docker + disk, so neither scales from a client past a few GB."
+}

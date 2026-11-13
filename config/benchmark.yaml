@@ -1,0 +1,120 @@
+# Database provisioning-cost benchmark configuration.
+#
+# The question: which way of provisioning a database for one automated-test
+# cycle puts REAL, production-shaped data into the fast inner loop at near-zero
+# per-cycle cost?
+#
+# Structural prediction under test: copy-on-write branch/clone provisioning cost
+# is roughly FLAT in data size (Neon branch, Aurora clone), while every
+# fidelity-preserving copy (fresh fixture, full restore, copy-based branch) GROWS
+# with data size. The in-memory fake (SQLite) is the fast-but-fake lower bound and
+# fails (OOM) beyond a few GB -- that failure is a recorded result.
+#
+# Scope = the paper's Table II: PostgreSQL only (RDS PostgreSQL copies vs Neon
+# branch / Aurora fast clone). The managed-cloud Table II rows are produced by the
+# scripts listed in the README ("Table II row -> reproduce command"); this file
+# drives the runner (local Docker phase + the cloud fresh fixture / CoW engines).
+
+runs: 20                 # N measured runs per cell
+cold_run_separate: true  # first (cold) run recorded but excluded from the median
+data_seed: 20260727
+output_dir: results
+primary_engine: postgres
+
+# Data scales. `rows` = number of `orders` fact rows; the generator derives
+# accounts / order_items / events from it. `target_bytes` ~ on-disk size.
+scales:
+  mb:
+    rows: 50_000
+    target_bytes: 20_000_000        # ~20 MB
+  gb:
+    rows: 5_000_000
+    target_bytes: 2_000_000_000     # ~2 GB  (the "anyone can reproduce" headline scale)
+  100gb:
+    rows: 250_000_000
+    target_bytes: 100_000_000_000   # ~100 GB -- cloud phase (disk-guarded locally)
+
+# ---------------------------------------------------------------------------
+# Strategies. Filter a run with --engines / --strategies.
+#   LOCAL (Docker)  -> reproduce the size-scaling story on a laptop, free.
+#   CLOUD (managed) -> the 5-engine head-to-head; needs Terraform + creds.
+# ---------------------------------------------------------------------------
+strategies:
+  # ---- Local Docker phase (free; validates the shape of the curve) ----
+  - {num: 1, name: in_memory_fake,        engine: sqlite,   driver: "branchbench.drivers.sqlite_memory:InMemoryFake",         enabled: true}
+  - {num: 2, name: pg_fresh_fixture,      engine: postgres, driver: "branchbench.drivers.postgres:PostgresFreshFixture",      enabled: true}
+  - {num: 3, name: pg_txn_rollback,       engine: postgres, driver: "branchbench.drivers.postgres:PostgresTxnRollback",       enabled: true}
+  - {num: 5, name: pg_full_restore,       engine: postgres, driver: "branchbench.drivers.postgres:PostgresFullRestore",       enabled: true}
+  - {num: 6, name: pg_copy_based_branch,  engine: postgres, driver: "branchbench.drivers.postgres:PostgresCopyBasedBranch",   enabled: true}
+
+  # ---- Cloud phase: managed "copy" (rises with size) ----
+  - {num: 2, name: rds_pg_fresh_fixture,    engine: rds_postgres,    driver: "branchbench.drivers.cloud_pg:CloudPgFreshFixture",     enabled: true}
+
+  # ---- Cloud phase: managed copy-on-write branch/clone (flat in size) ----
+  - {num: 6, name: aurora_cow_clone,   engine: aurora_postgres, driver: "branchbench.drivers.aurora_clone:AuroraCowClone", enabled: true}
+  - {num: 7, name: neon_cow_branch,    engine: neon,            driver: "branchbench.drivers.neon:NeonCowBranch",          enabled: true}
+
+# ---------------------------------------------------------------------------
+# Engine connection settings. Docker (local) values are shown inline; cloud
+# engine host/port/user/password are filled from Terraform outputs by
+# scripts/gen_config.py, written to config/cloud.yaml, and merged via --rds.
+# ---------------------------------------------------------------------------
+engines:
+  sqlite:
+    version_note: "SQLite (in-memory floor)"
+  postgres:
+    host: 127.0.0.1
+    port: 54329
+    user: bench
+    password: benchpw
+    admin_db: postgres
+    container_image: postgres:16
+    container_name_prefix: bb-pg
+    version_note: "PostgreSQL 16 (Docker)"
+
+  # ---- Cloud engines (host/port/user/password from Terraform via cloud.yaml) ----
+  rds_postgres:
+    host: "REPLACED_BY_cloud.yaml"
+    port: 5432
+    user: bench
+    password: "REPLACED_BY_cloud.yaml"
+    admin_db: postgres
+    sslmode: require
+    version_note: "RDS PostgreSQL 16 (record instance class in cloud.yaml)"
+  aurora_postgres:
+    host: "REPLACED_BY_cloud.yaml"
+    port: 5432
+    user: bench
+    password: "REPLACED_BY_cloud.yaml"
+    admin_db: postgres
+    sslmode: require
+    parent_db: branchbench_parent
+    aws:
+      region: us-west-2
+      source_cluster_id: bbench-aurora-pg
+      instance_class: db.r6g.large
+      # profile: <aws profile>   # optional; omit to use default credential chain
+    version_note: "Aurora PostgreSQL 16 (fast clone = storage CoW)"
+  neon:
+    api_key_env: NEON_API_KEY
+    # project_id: <existing project>   # omit to auto-create a project
+    region_id: aws-us-east-2
+    pg_version: 16
+    role: neondb_owner
+    version_note: "Neon serverless Postgres (CoW branching) -- the technology Databricks Lakebase is built on"
+
+# Steady-state read latency (read amplification) -- captured on CoW branches and
+# a copy baseline. Names match each driver's reported strategy name.
+steady_state:
+  enabled: true
+  queries: 200
+  on_strategies:
+    - neon_cow_branch
+    - aurora_cow_clone
+    - cloud_pg_fresh_fixture
+    - pg_full_restore
+    - pg_copy_based_branch
+
+telemetry:
+  capture_pg_stat_wal: true
+  capture_pg_stat_statements: true

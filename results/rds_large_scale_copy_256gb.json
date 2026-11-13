@@ -1,0 +1,17 @@
+{
+ "scale": "256gb",
+ "target_gb": 256.0,
+ "engine": "rds_postgres",
+ "mechanism": "CREATE DATABASE TEMPLATE (in-engine physical copy)",
+ "parent_bytes": 243805360611,
+ "seed_stats": {
+  "note": "already seeded",
+  "final_size_bytes": 243805360611
+ },
+ "cold_run_s": 2326.3953984580003,
+ "copy_provision_runs_s": [
+  2305.419292207982,
+  2245.160930916987
+ ],
+ "copy_provision_median_s": 2275.2901115624845
+}

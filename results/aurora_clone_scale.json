@@ -1,0 +1,41 @@
+{
+  "2": {
+    "parent_bytes": 2215264783,
+    "clone_provision_median_s": 369.1409377920063,
+    "clone_provision_runs_s": [
+      369.1409377920063,
+      354.1217067500038,
+      385.11558070799947
+    ],
+    "instance_class": "db.r6g.large"
+  },
+  "8": {
+    "parent_bytes": 8835342863,
+    "clone_provision_median_s": 353.2835195840016,
+    "clone_provision_runs_s": [
+      384.0731915829965,
+      323.21242258399434,
+      353.2835195840016
+    ],
+    "instance_class": "db.r6g.large"
+  },
+  "32": {
+    "parent_bytes": 35155845647,
+    "clone_provision_median_s": 452.2,
+    "clone_provision_runs_s": [
+      460.0,
+      444.4
+    ],
+    "instance_class": "db.r6g.large",
+    "note": "3rd run token expired; median of completed measured runs"
+  },
+  "256": {
+    "parent_bytes": 243809864279,
+    "clone_provision_median_s": 400.940562667005,
+    "clone_provision_runs_s": [
+      446.3763308339985,
+      355.5047945000115
+    ],
+    "instance_class": "db.r6g.large"
+  }
+}

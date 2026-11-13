@@ -1,0 +1,32 @@
+{
+  "1.0": {
+    "parent_bytes": 1017080407,
+    "parent_gb": 1.0,
+    "clone_provision_median_s": 454.40865037550975,
+    "clone_provision_runs_s": [
+      432.32877558399923,
+      476.48852516702027
+    ],
+    "instance_class": "db.r6g.large"
+  },
+  "64.0": {
+    "parent_bytes": 52482050647,
+    "parent_gb": 52.5,
+    "clone_provision_median_s": 362.3812651039916,
+    "clone_provision_runs_s": [
+      371.08491516599315,
+      353.67761504199007
+    ],
+    "instance_class": "db.r6g.large"
+  },
+  "128.0": {
+    "parent_bytes": 104986749527,
+    "parent_gb": 105.0,
+    "clone_provision_median_s": 460.6771560414927,
+    "clone_provision_runs_s": [
+      445.52658474998316,
+      475.82772733300226
+    ],
+    "instance_class": "db.r6g.large"
+  }
+}

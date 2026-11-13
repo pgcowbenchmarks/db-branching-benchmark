@@ -1,0 +1,20 @@
+{
+ "scale": "256gb",
+ "target_gb": 256.0,
+ "parent_logical_bytes": 217698353152,
+ "seed_stats": {
+  "orders": 432800000,
+  "order_items": 1081500000,
+  "events": 584010000,
+  "accounts": 11995428,
+  "final_size_bytes": 238818009088,
+  "elapsed_s": 2642.5385451316833
+ },
+ "branch_create_median_s": 0.3889581670227926,
+ "branch_create_runs_s": [
+  0.3889581670227926,
+  0.3786892080097459,
+  0.400051667005755
+ ],
+ "storage_at_creation_bytes": null
+}

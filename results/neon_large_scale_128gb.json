@@ -1,0 +1,18 @@
+{
+ "engine": "neon",
+ "target_gb": 128,
+ "measured": "2026-09-04",
+ "source": "recovered from the run log (neon_128gb.log); the JSON output was later overwritten by the 256 GB run",
+ "parent_pg_database_size_gb": 121.4,
+ "parent_neon_logical_size_gb": 114.6,
+ "cold_run_s": 0.446,
+ "branch_create_runs_s": [
+  0.43,
+  0.378,
+  0.406,
+  0.357,
+  0.398
+ ],
+ "branch_create_median_s": 0.398,
+ "storage_at_creation_bytes": null
+}

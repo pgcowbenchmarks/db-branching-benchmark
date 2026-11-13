@@ -1,0 +1,6 @@
+{
+ "engine": "lakebase",
+ "parent_bytes": 218235764736,
+ "storage_at_creation_bytes": 0,
+ "note": "The only storage-at-creation measurement in the benchmark (Lakebase branch of a 218 GB parent). The Neon runs did not capture storage at creation."
+}

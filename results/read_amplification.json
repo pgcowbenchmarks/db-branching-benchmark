@@ -1,0 +1,26 @@
+{
+ "engine": "lakebase",
+ "measured": "2026-08-28",
+ "engine_note": "Measured on a Databricks Lakebase copy-on-write branch with the original harness; the Neon driver was added 2026-09-03. Re-measurable on Neon via steady_state in config/benchmark.yaml.",
+ "measurement": "CoW read amplification (first-touch vs warm) at GB scale",
+ "method": "Same laptop client + same branch connection; RTT is common-mode and cancels in the first-touch-vs-warm delta. Absolute ms inflated by laptop->cloud RTT (~300ms).",
+ "queries": [
+  "top-accounts GROUP BY scan",
+  "hot-account point lookup"
+ ],
+ "cow_branch_first_touch": {
+  "median_ms": 362.79,
+  "n": 30
+ },
+ "cow_branch_warm": {
+  "median_ms": 319.93,
+  "n": 30
+ },
+ "parent_full_materialized": {
+  "median_ms": 498.0,
+  "n": 30
+ },
+ "read_amplification_first_touch_vs_warm_ms": 42.86,
+ "read_amplification_pct": 13.4,
+ "takeaway": "CoW first-touch reads are ~13% slower than warm; the branch is not slower than a fully materialized copy. Read amplification is modest and transient."
+}

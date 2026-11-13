@@ -1,0 +1,21 @@
+{
+ "scale": "128gb",
+ "target_gb": 128.0,
+ "engine": "rds_postgres",
+ "mechanism": "CREATE DATABASE TEMPLATE (in-engine physical copy)",
+ "parent_bytes": 121414386191,
+ "seed_stats": {
+  "orders": 220000000,
+  "order_items": 550000000,
+  "events": 297000000,
+  "accounts": 5997714,
+  "final_size_bytes": 121414386191,
+  "elapsed_s": 3102.8039360046387
+ },
+ "copy_provision_median_s": 1104.0730492080002,
+ "copy_provision_runs_s": [
+  1107.5347524999997,
+  1104.0730492080002,
+  1089.2476315000022
+ ]
+}

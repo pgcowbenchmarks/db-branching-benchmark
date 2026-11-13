@@ -1,0 +1,12 @@
+{
+ "note": "parent_bytes in neon_flatness.json is the Neon API logical_size, which lags writes (it read 0.06 GB after seeding to 1 and 2 GB). These are pg_database_size values logged at the end of each seed step.",
+ "source": "neon_flatness2.log (0.02-8 GB), neon_flatness3.log (32 GB), neon_flatness4.log (64 GB)",
+ "parent_pg_database_size_gb": {
+  "0.02": 0.04,
+  "1": 1.0,
+  "2": 1.9,
+  "8": 7.4,
+  "32": 27.0,
+  "64": 52.5
+ }
+}
